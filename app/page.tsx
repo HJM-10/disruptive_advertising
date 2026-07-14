@@ -3,7 +3,7 @@
 import {
   ArrowRight,
   BarChart3,
-  CheckCircle2,
+  Check,
   ChevronDown,
   LineChart,
   Menu,
@@ -14,94 +14,84 @@ import {
   Target,
   TrendingUp,
   Users,
+  Volume2,
   X
 } from "lucide-react";
 import { FormEvent, useState } from "react";
 
-const logoNames = [
-  "GUITAR CENTER",
-  "PENNYMAC",
-  "INSTRUCTURE",
-  "ARENA",
-  "PROCURIFY",
-  "ADOBE",
-  "FIRST LITE",
-  "LITTER ROBOT",
-  "KPMG",
-  "CONOCO"
-];
-
-const serviceColumns = [
+const navGroups = [
   {
-    title: "What We Do",
-    items: ["All Services", "Paid Search", "Paid Social", "SEO", "Amazon", "Lifecycle Marketing", "CRO", "Creative", "Data Analytics"]
+    label: "What We Do",
+    heading: "What We Do",
+    items: ["All Services", "Paid Search", "Paid Social", "SEO", "Amazon", "Lifecycle Marketing", "CRO", "Creative", "Data Analytics", "Lead Generation"]
   },
   {
-    title: "Who We Help",
-    items: ["B2B", "B2C", "eCommerce", "Local", "SaaS", "Online Education", "High AOV Brands"]
+    label: "Who We Help",
+    heading: "Who We Help",
+    items: ["B2B", "B2C", "eCommerce", "Local", "Garage Door", "SaaS", "Online Education", "Outdoor Sporting Goods", "High AOV Brands"]
   },
   {
-    title: "Who We Are",
+    label: "Who We Are",
+    heading: "Who We Are",
     items: ["About Us", "Why Disruptive", "Meet Our Team", "Our Mission", "Giving Back", "Careers"]
+  },
+  {
+    label: "Resources",
+    heading: "Resources",
+    items: ["Our Blog", "Webinars & Recordings", "Partners", "Marketing Guides", "Free Tools"]
   }
 ];
 
+const logoNames = ["Guitar Center", "PennyMac", "instructure", "arena", "Procurify", "Adobe", "FIRST LITE", "Litter-Robot", "crossover symmetry"];
+
 const proofStats = [
-  ["4.8", "Average rating from hundreds of public reviews"],
-  ["90+", "Long-term clients partnered for four or more years"],
-  ["160+", "Specialists aligned around measurable growth"],
-  ["#145", "Recognized on a major fastest-growing company list"],
-  ["$450M+", "Annual managed media spend across client accounts"]
+  ["4.8", "Average rating from 350+ reviews on Clutch"],
+  ["90+", "Clients with us for four years or more"],
+  ["160+", "People aligned with our mission"],
+  ["#145", "On the Inc. 500"],
+  ["$450M+", "In annual ad spend managed for clients"]
 ];
 
 const values = [
-  ["Authenticity", "Partner with brands and marketers whose goals are clear and honest."],
-  ["Top Talent", "Match each account with senior specialists across the growth stack."],
-  ["Strategy", "Tie every channel decision to margin, lead quality, and revenue."],
-  ["Breakthroughs", "Test creative, landing pages, audiences, and offers until waste drops."],
-  ["Exclusivity", "Stay selective so every client gets the attention growth demands."]
+  ["Authenticity", "We work with brands and people we believe in, with complete commitment to their success."],
+  ["Top Talent", "Specialists are developed continuously and paired with the work they are best equipped to win."],
+  ["Strategy", "Business goals, customer journeys, media, creative, and data are connected before a dollar is scaled."],
+  ["Breakthroughs", "A disciplined test-and-learn operating rhythm creates the next measurable lift."],
+  ["Exclusivity", "We stay selective so clients gain access to the attention, community, and expertise they need."]
 ];
 
 const timeline = [
-  ["Initial Discovery", "A fast look at goals, budget, channels, and current blockers."],
-  ["Audit Review", "Waste, leakage, and underused opportunity are mapped clearly."],
-  ["Mutual Fit", "Both teams confirm expectations, targets, and operating rhythm."],
-  ["Impact Check-In", "Early wins and risks are reviewed before scaling further."],
-  ["Strategy Workshop", "Channel owners align on creative, media, CRO, and analytics."],
-  ["Ongoing Growth", "Weekly testing and transparent reporting keep momentum visible."]
+  ["01", "Initial Discovery", "Goals, constraints, economics, and growth blockers."],
+  ["02", "Onboarding", "A clear operating plan and the right specialists."],
+  ["03", "Mutual Understanding", "Shared targets, reporting, and accountability."],
+  ["04", "Impact Check-In", "Early signals turn into the next priorities."],
+  ["05", "Strategy Workshop", "Channel, creative, CRO, and lifecycle alignment."],
+  ["06", "Ongoing Strategy", "Continuous learning compounds the gains."]
 ];
 
 const testimonials = [
-  {
-    name: "Marketing Director",
-    company: "B2B Software Brand",
-    quote:
-      "The audit made our wasted spend painfully obvious, but the plan was calm, practical, and immediately useful."
-  },
-  {
-    name: "Founder",
-    company: "eCommerce Retailer",
-    quote:
-      "They moved beyond clicks and helped us understand which campaigns were actually creating profitable customers."
-  },
-  {
-    name: "Growth Lead",
-    company: "Local Services Group",
-    quote:
-      "The communication rhythm felt senior from week one. We always knew what was being tested and why."
-  }
+  ["Dider Bizimungu", "Matterport, Paid Media Director", "We are a unique company with unique solutions, so having a flexible, receptive, and knowledgeable partner is crucial to us achieving our goals."],
+  ["Maggie Li", "MyHealthTeams, Growth Marketing Manager", "The workflow between our teams is seamless and based on mutual trust and communication. The team is really knowledgeable."],
+  ["Kaili Spear", "Grow.com, Marketing Manager", "They started getting results quickly and the leads are already moving through the funnel. We are super happy."]
 ];
 
+function Brand() {
+  return (
+    <span className="wordmark" aria-label="Disruptive Advertising">
+      <span className="wordmark-dis">DIS</span><span className="wordmark-r">R</span><span className="wordmark-uptive">UPTIVE</span>
+    </span>
+  );
+}
+
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [formStatus, setFormStatus] = useState("");
 
   async function submitAudit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(form.entries());
-
-    setFormStatus("Sending...");
+    const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+    setFormStatus("Sending your request...");
     const response = await fetch("/api/audit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -111,322 +101,128 @@ export default function Home() {
     setFormStatus(data.message);
   }
 
+  function closeMenus() {
+    setActiveMenu(null);
+    setMobileOpen(false);
+  }
+
+  const activeGroup = navGroups.find((group) => group.label === activeMenu);
+
   return (
-    <main>
+    <main id="top">
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Disruptive Advertising home">
-          <span className="brand-mark">D</span>
-          <span>Disruptive Advertising</span>
-        </a>
-        <button
-          className="menu-button"
-          type="button"
-          aria-label="Toggle navigation"
-          onClick={() => setMenuOpen((value) => !value)}
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        <a className="brand" href="#top" onClick={closeMenus}><Brand /></a>
+        <nav className="desktop-nav" aria-label="Main navigation">
+          {navGroups.slice(0, 3).map((group) => (
+            <button className={activeMenu === group.label ? "desktop-nav-item is-open" : "desktop-nav-item"} type="button" key={group.label} onClick={() => setActiveMenu(activeMenu === group.label ? null : group.label)}>
+              {group.label}<ChevronDown size={18} />
+            </button>
+          ))}
+          <a href="#results" onClick={() => setActiveMenu(null)}>Results</a>
+          <button className={activeMenu === "Resources" ? "desktop-nav-item is-open" : "desktop-nav-item"} type="button" onClick={() => setActiveMenu(activeMenu === "Resources" ? null : "Resources")}>
+            Resources<ChevronDown size={18} />
+          </button>
+        </nav>
+        <a className="talk-button" href="#audit" onClick={closeMenus}>Let&apos;s Talk</a>
+        <button className="menu-button" type="button" aria-label={mobileOpen ? "Close navigation" : "Open navigation"} aria-expanded={mobileOpen} onClick={() => setMobileOpen(!mobileOpen)}>
+          {mobileOpen ? <X size={27} /> : <Menu size={27} />}
         </button>
-        <nav className={menuOpen ? "nav nav-open" : "nav"} aria-label="Main navigation">
-          {serviceColumns.map((column) => (
-            <div className="nav-item" key={column.title}>
-              <button type="button">
-                {column.title}
-                <ChevronDown size={15} />
-              </button>
-              <div className="mega-menu">
-                <strong>{column.title}</strong>
-                {column.items.map((item) => (
-                  <a href="#services" key={item}>
-                    {item}
-                  </a>
-                ))}
+
+        {activeGroup && (
+          <div className="mega-panel" onMouseLeave={() => setActiveMenu(null)}>
+            <div className="mega-inner">
+              <div className="mega-title"><h2>{activeGroup.heading}</h2><span /></div>
+              <div className="mega-links">
+                {activeGroup.items.map((item) => <a href="#services" key={item} onClick={() => setActiveMenu(null)}>{item}<ArrowRight size={15} /></a>)}
               </div>
             </div>
-          ))}
-          <a href="#results">Results</a>
-          <a href="#resources">Resources</a>
-          <a className="nav-cta" href="#audit">
-            Let's Talk
-          </a>
-        </nav>
+          </div>
+        )}
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-overlay" />
-        <div className="hero-content">
-          <p className="eyebrow">Top reviewed agency in the USA | No-strings-attached audit</p>
-          <h1>Most marketing budgets are wasted. Let&apos;s fix that.</h1>
-          <p>
-            Get a clear look at the channels, offers, landing pages, and tracking gaps quietly
-            draining your growth budget.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-button" href="#audit">
-              Get Your Free Marketing Audit
-              <ArrowRight size={18} />
-            </a>
-            <a className="secondary-button" href="#results">
-              See Results
-            </a>
-          </div>
-        </div>
-        <div className="hero-card" aria-label="Audit summary preview">
-          <span>Audit Preview</span>
-          <strong>76%</strong>
-          <p>Average budget waste found in underperforming accounts.</p>
-          <div className="mini-chart">
-            <i />
-            <i />
-            <i />
-            <i />
-            <i />
-          </div>
-        </div>
-      </section>
-
-      <section className="logo-strip" aria-label="Representative client logos">
-        <div className="logo-track">
-          {[...logoNames, ...logoNames].map((name, index) => (
-            <span key={`${name}-${index}`}>{name}</span>
-          ))}
-        </div>
-      </section>
-
-      <section className="reviews section-pad">
-        <div className="section-heading centered">
-          <p className="eyebrow">Loved by business owners and marketers</p>
-          <h2>What marketers say about Disruptive</h2>
-        </div>
-        <div className="testimonial-grid">
-          {testimonials.map((item) => (
-            <article className="testimonial-card" key={item.company}>
-              <MessageSquareQuote size={28} />
-              <p>&quot;{item.quote}&quot;</p>
-              <strong>{item.name}</strong>
-              <span>{item.company}</span>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="proof-band" id="results">
-        {proofStats.map(([number, label]) => (
-          <div className="stat" key={number}>
-            <strong>{number}</strong>
-            <span>{label}</span>
-          </div>
+      <div className={mobileOpen ? "drawer-scrim visible" : "drawer-scrim"} onClick={closeMenus} />
+      <aside className={mobileOpen ? "mobile-drawer open" : "mobile-drawer"} aria-label="Mobile navigation">
+        <div className="drawer-brand"><Brand /><button type="button" onClick={closeMenus} aria-label="Close navigation"><X size={24} /></button></div>
+        {navGroups.map((group) => (
+          <details key={group.label}>
+            <summary>{group.label}<ChevronDown size={18} /></summary>
+            <div>{group.items.map((item) => <a href="#services" onClick={closeMenus} key={item}>{item}</a>)}</div>
+          </details>
         ))}
+        <a className="drawer-result" href="#results" onClick={closeMenus}>Results</a>
+        <a className="drawer-talk" href="#audit" onClick={closeMenus}>Let&apos;s Talk <ArrowRight size={18} /></a>
+      </aside>
+
+      <section className="showreel" aria-label="Animated performance marketing showreel">
+        <div className="showreel-grid" />
+        <span className="showreel-asterisk">✳</span>
+        <span className="showreel-side">Disruptive Advertising</span>
+        <span className="showreel-brand brand-fade brand-one">Scotts</span>
+        <span className="showreel-brand brand-fade brand-two">Adobe</span>
+        <span className="showreel-number number-one">+38%</span>
+        <span className="showreel-number number-two">+76%</span>
+        <div className="showreel-art" aria-hidden="true">
+          <div className="art-halo halo-one" /><div className="art-halo halo-two" />
+          <div className="art-head" /><div className="art-body" />
+          <div className="art-leg leg-left" /><div className="art-leg leg-right" />
+          <div className="art-arm arm-left" /><div className="art-arm arm-right" />
+          <div className="art-leaves"><i /><i /><i /><i /><i /><i /></div>
+        </div>
+        <button className="sound-button" type="button" aria-label="Showreel audio is muted"><Volume2 size={18} /></button>
+        <p className="showreel-caption">A performance marketing agency for authentic brands.</p>
       </section>
 
-      <section className="guarantee section-pad">
-        <div className="split">
-          <div>
-            <p className="eyebrow">Risk-free guarantee</p>
-            <h2>Get results in 90 days or you do not pay.</h2>
-            <p>
-              The first step is a clear audit: what is working, what is leaking money, and where
-              the fastest measurable improvements are hiding.
-            </p>
-            <a className="primary-button" href="#audit">
-              Get Your Free Marketing Audit
-              <ArrowRight size={18} />
-            </a>
-          </div>
-          <div className="rating-panel">
-            <div className="stars">★★★★★</div>
-            <strong>Hundreds of five-star review signals</strong>
-            <p>
-              A recreated review widget with the same proof-driven role as the original page,
-              built with fresh visual treatment.
-            </p>
-          </div>
+      <section className="hero-copy section-shell">
+        <div className="client-marquee" aria-label="Selected client brands"><div>{[...logoNames, ...logoNames].map((name, index) => <span key={`${name}-${index}`}>{name}</span>)}</div></div>
+        <div className="hero-message">
+          <p className="kicker">Top reviewed agency in the USA <b>|</b> No strings attached audit</p>
+          <h1>Most Marketing Budgets Are Wasted—Let&apos;s Fix That</h1>
+          <p className="hero-lede">After thousands of audits, we&apos;ve found that <strong>76% of marketing spend goes to waste.</strong> We&apos;ll show you where yours is leaking—and how to fix it fast.</p>
+          <a className="red-button" href="#audit">Get Your Free Marketing Audit <ArrowRight size={19} /></a>
         </div>
+        <div className="ribbon-proof"><span>★★★★★</span><strong>Loved by Business Owners &amp; Marketers</strong></div>
       </section>
 
-      <section className="agency section-pad" id="services">
-        <div className="section-heading">
-          <p className="eyebrow">Over $450M in annual managed ad spend</p>
-          <h2>Meet a performance marketing team built around accountable growth.</h2>
-          <p>
-            Strategy, media, creative, lifecycle, CRO, and analytics are brought together so every
-            channel can be judged by the same commercial scoreboard.
-          </p>
-        </div>
-        <div className="value-grid">
-          {values.map(([title, description], index) => {
-            const icons = [ShieldCheck, Users, Target, Sparkles, CheckCircle2];
-            const Icon = icons[index];
-            return (
-              <article className="value-card" key={title}>
-                <Icon size={30} />
-                <h3>{title}</h3>
-                <p>{description}</p>
-              </article>
-            );
-          })}
+      <section className="testimonial-section section-shell">
+        <div className="section-intro centered"><p className="kicker">What marketers say about Disruptive</p><h2>Real outcomes. Real relationships.</h2></div>
+        <div className="testimonial-row">
+          {testimonials.map(([name, company, quote], index) => <article className="quote-card" key={company}><div className={`portrait portrait-${index + 1}`}><span>{name.slice(0, 1)}</span></div><div><span className="stars">★★★★★</span><MessageSquareQuote size={24} /><p>“{quote}”</p><strong>{name}</strong><small>{company}</small></div></article>)}
         </div>
       </section>
 
-      <section className="selective section-pad">
-        <div className="selective-image" aria-label="Marketing team workshop" />
-        <div className="selective-copy">
-          <p className="eyebrow">Most agencies say yes to everyone. We do not.</p>
-          <h2>Only taking on 10 new clients this month.</h2>
-          <p>
-            After thousands of audits and billions in tracked spend, fit matters. The best
-            partnerships start with a practical plan before any contract is discussed.
-          </p>
-          <a className="primary-button" href="#audit">
-            Reserve Your Audit
-            <ArrowRight size={18} />
-          </a>
+      <section className="proof-strip" id="results">
+        {proofStats.map(([stat, label], index) => <article key={stat}><div className={`proof-icon icon-${index + 1}`}>{index === 0 ? "★" : index === 1 ? "↔" : index === 2 ? "✦" : index === 3 ? "#" : "$"}</div><strong>{stat}</strong><p>{label}</p></article>)}
+      </section>
+
+      <section className="guarantee section-shell">
+        <div className="guarantee-stamp"><span>Risk-Free</span><strong>Guarantee</strong></div>
+        <div className="guarantee-copy"><h2>Get Results in 90 Days—Or You Don&apos;t Pay</h2><p><strong>Most agencies guess. We audit, prove, and guarantee.</strong></p><p>Our free marketing audit identifies waste and missed opportunities. Qualifying brands get a measurable-growth guarantee within 90 days—without a long-term contract.</p><a className="red-button" href="#audit">Get Your Free Marketing Audit <ArrowRight size={19} /></a></div>
+        <div className="clutch-card"><span>★★★★★</span><strong>AVG. RATING OF 4.8 / 5.0 STARS ON CLUTCH!</strong><div className="clutch-lines"><i /><i /><i /></div><small>Hundreds of public reviews</small></div>
+      </section>
+
+      <section className="agency-section section-shell" id="services">
+        <div className="agency-title"><p className="kicker">Over $450+ million in annual managed ad spend</p><h2>Meet Disruptive Advertising: the #1 most reviewed digital marketing agency</h2><p>We pair empowered marketers with win-win-win minded people and brands they believe in. The result is a marketing relationship built for accountability and breakthrough performance.</p></div>
+        <div className="value-list">
+          {values.map(([title, copy], index) => { const icons = [ShieldCheck, Users, Target, Sparkles, Check]; const Icon = icons[index]; return <article key={title}><Icon size={32} /><h3>{title}</h3><p>{copy}</p></article>; })}
         </div>
       </section>
 
-      <section className="timeline section-pad">
-        <div className="section-heading centered">
-          <h2>New client timeline to success</h2>
-        </div>
-        <div className="timeline-grid">
-          {timeline.map(([title, description], index) => (
-            <article className="timeline-step" key={title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <h3>{title}</h3>
-              <p>{description}</p>
-            </article>
-          ))}
-        </div>
+      <section className="selective-section">
+        <div className="selective-photo"><span>10,000+</span><small>audits completed</small></div>
+        <div className="selective-copy"><p className="kicker">Most agencies say yes to everyone. We don&apos;t.</p><h2>We&apos;re Only Taking On 10 New Clients This Month</h2><p>After 10,000+ audits and $1B+ managed in ad spend, we know what works—and what wastes your budget. Start with a no-strings-attached audit and leave with a plan.</p><strong>Want in? Grab your spot before they&apos;re gone.</strong><a className="outline-button" href="#audit">Get Your Free Marketing Audit <ArrowRight size={19} /></a></div>
       </section>
 
-      <section className="growth section-pad">
-        <div>
-          <h2>What is slowing down your growth?</h2>
-          <p>
-            The audit gives you a concrete view of what to keep, what to cut, and what to test next
-            across paid media, landing pages, lifecycle flows, and attribution.
-          </p>
-        </div>
-        <div className="growth-stack">
-          <div>
-            <Search size={24} />
-            Channel leakage
-          </div>
-          <div>
-            <LineChart size={24} />
-            Conversion lift
-          </div>
-          <div>
-            <BarChart3 size={24} />
-            Reporting clarity
-          </div>
-        </div>
-      </section>
+      <section className="timeline-section section-shell"><div className="section-intro centered"><p className="kicker">New client timeline to success</p><h2>Build momentum without guesswork.</h2></div><div className="timeline-grid">{timeline.map(([number, title, copy]) => <article key={number}><span>{number}</span><i /><h3>{title}</h3><p>{copy}</p></article>)}</div></section>
 
-      <section className="audiences section-pad">
-        <div className="section-heading centered">
-          <p className="eyebrow">For business owners and marketers</p>
-          <h2>The right partner for teams that need momentum.</h2>
-        </div>
-        <div className="audience-grid">
-          <article>
-            <h3>For Business Owners</h3>
-            <ul>
-              <li>Receive a focused strategy to get revenue growth moving again.</li>
-              <li>Solve urgent marketing challenges with senior channel ownership.</li>
-              <li>Stop hiring, firing, and managing isolated marketing roles.</li>
-            </ul>
-          </article>
-          <article>
-            <h3>For Marketers</h3>
-            <ul>
-              <li>Improve performance without rebuilding your team from scratch.</li>
-              <li>Look sharper internally with clear reporting and next steps.</li>
-              <li>Focus on your best work while specialists cover the gaps.</li>
-            </ul>
-          </article>
-        </div>
-      </section>
+      <section className="growth-section"><div className="growth-canvas"><span>76%</span><i /><i /><i /></div><div><p className="kicker">Your free growth audit</p><h2>What&apos;s Slowing Down Your Growth?</h2><p>Our audit gives you a clear picture of what&apos;s working, what&apos;s not, and where to optimize. Whether you work with us or not, the goal is simple: help you move faster toward real results.</p><a className="red-button" href="#audit">Get Your Free Marketing Audit <ArrowRight size={19} /></a></div></section>
 
-      <section className="success section-pad">
-        <div className="section-heading centered">
-          <p className="eyebrow">#1 most reviewed agency style proof</p>
-          <h2>Helping marketers hit the goals that matter.</h2>
-        </div>
-        <div className="portrait-row">
-          {["USA Clean", "Panda Windows", "Little Adventures", "Smarty", "Sunline", "Phone Ninjas"].map(
-            (name, index) => (
-              <div className="portrait" key={name}>
-                <span>{name}</span>
-                <i>{index + 1}</i>
-              </div>
-            )
-          )}
-        </div>
-      </section>
+      <section className="audiences section-shell"><div className="section-intro centered"><p className="kicker">The perfect digital marketing agency for</p><h2>Business owners and marketers</h2></div><div className="audience-columns"><article><h3>For Business Owners</h3><p><b>Grow your business</b>Receive a winning strategy and get revenue growth moving again.</p><p><b>Drive immediate impact</b>Get results that solve the current pain in your marketing.</p><p><b>Stop managing marketers</b>Let a trusted team hire, develop, and retain top talent.</p></article><article><h3>For Marketers</h3><p><b>Improve performance</b>Elevate your strategy and start hitting the right numbers.</p><p><b>Look great internally</b>Win with clear reporting, priorities, and a strategic partner.</p><p><b>Focus on your best work</b>Surround yourself with complementary experts and resources.</p></article></div></section>
 
-      <section className="audit section-pad" id="audit">
-        <div className="audit-copy">
-          <p className="eyebrow">Let&apos;s do this</p>
-          <h2>Get a free marketing audit.</h2>
-          <p>
-            Share a few details and the Next.js backend route will validate and return a realistic
-            confirmation, ready to connect to email or a CRM later.
-          </p>
-        </div>
-        <form className="audit-form" onSubmit={submitAudit}>
-          <label>
-            Name
-            <input name="name" placeholder="Your name" required />
-          </label>
-          <label>
-            Business email
-            <input name="email" type="email" placeholder="you@company.com" required />
-          </label>
-          <label>
-            Company
-            <input name="company" placeholder="Company name" required />
-          </label>
-          <label>
-            Monthly media spend
-            <select name="spend" defaultValue="$25k-$50k">
-              <option>$0-$25k</option>
-              <option>$25k-$50k</option>
-              <option>$50k-$100k</option>
-              <option>$100k+</option>
-            </select>
-          </label>
-          <button className="primary-button" type="submit">
-            Submit Audit Request
-            <TrendingUp size={18} />
-          </button>
-          <p className="form-status" role="status">
-            {formStatus}
-          </p>
-        </form>
-      </section>
+      <section className="client-wall"><div><p className="kicker">#1 most reviewed agency</p><h2>We&apos;ve helped thousands of marketers achieve their goals.</h2></div><div className="wall-tiles">{["USA CLEAN", "PANDA", "LITTLE", "smarty", "Sunline", "PHONE NINJAS"].map((name, index) => <article key={name} className={`wall-tile tile-${index + 1}`}><span>{name}</span></article>)}</div></section>
 
-      <footer className="footer" id="resources">
-        <div>
-          <a className="brand footer-brand" href="#top">
-            <span className="brand-mark">D</span>
-            <span>Disruptive Advertising</span>
-          </a>
-          <p>(877) 956-7510</p>
-          <p>Educational Next.js recreation for coursework.</p>
-        </div>
-        <div className="footer-links">
-          {serviceColumns.map((column) => (
-            <div key={column.title}>
-              <strong>{column.title}</strong>
-              {column.items.slice(0, 6).map((item) => (
-                <a href="#services" key={item}>
-                  {item}
-                </a>
-              ))}
-            </div>
-          ))}
-        </div>
-      </footer>
+      <section className="audit-section" id="audit"><div className="audit-copy"><p className="kicker">Let&apos;s do this</p><h2>Let&apos;s get in touch to see if we&apos;re a good fit.</h2><p>Tell us about your goals. This Next.js form route validates the request and returns a confirmation ready for an email or CRM integration.</p></div><form className="audit-form" onSubmit={submitAudit}><label>First name<input name="name" required /></label><label>Business email<input name="email" type="email" required /></label><label>Company<input name="company" required /></label><label>Annual revenue<select name="revenue" defaultValue=""><option value="" disabled>Select annual revenue</option><option>Less than $1M</option><option>$1M – $5M</option><option>$5M – $25M</option><option>Greater than $25M</option></select></label><button className="red-button" type="submit">Get Your Free Marketing Audit <TrendingUp size={18} /></button><p className="form-status" role="status">{formStatus}</p></form></section>
+
+      <footer className="footer"><div><Brand /><p>(877) 956-7510</p><a href="#audit">Contact us</a></div><div className="footer-columns">{navGroups.slice(0, 3).map((group) => <div key={group.label}><strong>{group.label}</strong>{group.items.slice(0, 6).map((item) => <a href="#services" key={item}>{item}</a>)}</div>)}</div><small>© 2026 Coursework recreation. Original implementation and media are not included.</small></footer>
     </main>
   );
 }
